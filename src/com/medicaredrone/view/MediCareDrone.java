@@ -2,6 +2,10 @@ package com.medicaredrone.view;
 
 import com.medicaredrone.controller.ValidationUtil;
 import com.medicaredrone.model.DroneModel;
+import com.medicaredrone.controller.algorithms.SelectionSort;
+import com.medicaredrone.controller.algorithms.InsertionSort;
+import com.medicaredrone.controller.algorithms.MergeSort;
+import com.medicaredrone.controller.algorithms.BinarySearch;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -13,14 +17,16 @@ import java.awt.Font;
 import java.awt.Image;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-
 /**
  *
- * @author suman lama
+ * @author suman lama 23048591
  */
 public class MediCareDrone extends javax.swing.JFrame {
 
@@ -28,19 +34,19 @@ public class MediCareDrone extends javax.swing.JFrame {
     private java.awt.CardLayout cardLayout;
 
     /**
-     * Creates new form CollegeApp
+     * Initializes the MediCareDrone GUI, setting up layout, data, and loading
+     * screen. Configures the window size, sets a custom icon, and initializes
+     * necessary components.
      */
     public MediCareDrone() {
-        
-        setLocation(200,100);
+
+        setLocation(200, 100);
         setResizable(false);
         initComponents();
         initializeLayout(); // Set up CardLayout and add screens
-        initializeData(); // Initialize student data and table
+        initializeData(); // Initialize drone data and table
         startProgress();// Show loading screen and initiate progress
-        
-        
-        
+
         // Set custom icon with resized dimensions
         try {
             ImageIcon icon = new ImageIcon(this.getClass().getResource("/com/collegeapp/resources/logo.png"));
@@ -49,8 +55,7 @@ public class MediCareDrone extends javax.swing.JFrame {
         } catch (Exception e) {
             System.err.println("Icon image not found: " + e.getMessage());
         }
-        
-        
+
     }
 
     /**
@@ -101,6 +106,8 @@ public class MediCareDrone extends javax.swing.JFrame {
         lblErrorItemName = new javax.swing.JLabel();
         lblErrorLoadCapacity = new javax.swing.JLabel();
         lblMessage = new javax.swing.JLabel();
+        btnSort = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
         pnlAdminControl = new javax.swing.JPanel();
         pnlButton = new javax.swing.JPanel();
         VivaInfoAfter = new javax.swing.JLabel();
@@ -131,10 +138,22 @@ public class MediCareDrone extends javax.swing.JFrame {
         lblMotorSubTitle = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         pnlVivaList = new javax.swing.JPanel();
-        spTblStudentViva = new javax.swing.JScrollPane();
-        tblVivaStudentAfterQueue = new javax.swing.JTable();
         spTblStudentViva1 = new javax.swing.JScrollPane();
-        tblVivaStudentQueueList = new javax.swing.JTable();
+        tblDroneInformation = new javax.swing.JTable();
+        lblSort = new javax.swing.JLabel();
+        lblSearch = new javax.swing.JLabel();
+        cmbSortBy = new javax.swing.JComboBox<>();
+        cmbSelectionSortingOrder = new javax.swing.JComboBox<>();
+        txtSearchValue = new javax.swing.JTextField();
+        cmbSearchBy = new javax.swing.JComboBox<>();
+        btnViewDetails = new javax.swing.JButton();
+        lblDroneInformation = new javax.swing.JLabel();
+        btnSorting = new javax.swing.JButton();
+        btnSearching = new javax.swing.JButton();
+        pnlBackgroundColor = new javax.swing.JPanel();
+        jToolBar1 = new javax.swing.JToolBar();
+        jtoolRedColor = new javax.swing.JToolBar();
+        jtoolRedColor1 = new javax.swing.JToolBar();
         pnlLoginScreen = new javax.swing.JPanel();
         lblLoginTitle = new javax.swing.JLabel();
         txtFldLoginUsername = new javax.swing.JTextField();
@@ -259,6 +278,7 @@ public class MediCareDrone extends javax.swing.JFrame {
         tabPaneMain.addTab("Home", pnlHome);
 
         pnlStudentList.setBackground(new java.awt.Color(255, 255, 255));
+        pnlStudentList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tblDrone.setBackground(new java.awt.Color(153, 204, 255));
         tblDrone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -299,10 +319,13 @@ public class MediCareDrone extends javax.swing.JFrame {
             tblDrone.getColumnModel().getColumn(4).setPreferredWidth(40);
         }
 
+        pnlStudentList.add(spTblStudent, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 68, 1197, 263));
+
         lblTblStudentTitle.setBackground(new java.awt.Color(255, 255, 255));
         lblTblStudentTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTblStudentTitle.setForeground(new java.awt.Color(26, 82, 117));
         lblTblStudentTitle.setText("Comprehensive Drone Details and Deployment Information >>");
+        pnlStudentList.add(lblTblStudentTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 23, 720, 33));
 
         btnAdd.setBackground(new java.awt.Color(0, 153, 255));
         btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -384,9 +407,13 @@ public class MediCareDrone extends javax.swing.JFrame {
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
+        pnlStudentList.add(pnlButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 343, -1, -1));
+
         txtRequesterName.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "RequesterName", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
+        pnlStudentList.add(txtRequesterName, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 494, 149, 60));
 
         txtItemName.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ItemName", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
+        pnlStudentList.add(txtItemName, new org.netbeans.lib.awtextra.AbsoluteConstraints(473, 494, 149, 60));
 
         txtEmergencyContact.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EmergencyContact", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
         txtEmergencyContact.addActionListener(new java.awt.event.ActionListener() {
@@ -394,114 +421,47 @@ public class MediCareDrone extends javax.swing.JFrame {
                 txtEmergencyContactActionPerformed(evt);
             }
         });
+        pnlStudentList.add(txtEmergencyContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(956, 395, 149, 60));
 
         txtLocation.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Location", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 83, 117))); // NOI18N
+        pnlStudentList.add(txtLocation, new org.netbeans.lib.awtextra.AbsoluteConstraints(719, 395, 149, 60));
 
         txtDroneId.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DroneID", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
+        pnlStudentList.add(txtDroneId, new org.netbeans.lib.awtextra.AbsoluteConstraints(242, 395, 149, 60));
 
         txtLoadCapacity.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LoadCapacity(kg)", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
+        pnlStudentList.add(txtLoadCapacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(956, 496, 149, 60));
+        pnlStudentList.add(lblErrorDroneId, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 452, 211, 24));
 
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Completed", "Pending", "Failed" }));
         cmbStatus.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Status", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
+        pnlStudentList.add(cmbStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(473, 393, 149, 60));
 
         cmbWeatherCondition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sunny", "Cloudy", "Rainy", "Snowy", "Foggy", "Windy" }));
         cmbWeatherCondition.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Weather Condition", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
+        pnlStudentList.add(cmbWeatherCondition, new org.netbeans.lib.awtextra.AbsoluteConstraints(719, 492, 149, 60));
+        pnlStudentList.add(lblErrorLocation, new org.netbeans.lib.awtextra.AbsoluteConstraints(719, 452, 234, 24));
+        pnlStudentList.add(lblErrorEmergencyContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(959, 452, 232, 28));
+        pnlStudentList.add(lblErrorRequesterName, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 560, 226, 25));
+        pnlStudentList.add(lblErrorItemName, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 560, 210, 25));
+        pnlStudentList.add(lblErrorLoadCapacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 550, 171, 40));
+        pnlStudentList.add(lblMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(496, 343, 331, 32));
 
-        javax.swing.GroupLayout pnlStudentListLayout = new javax.swing.GroupLayout(pnlStudentList);
-        pnlStudentList.setLayout(pnlStudentListLayout);
-        pnlStudentListLayout.setHorizontalGroup(
-            pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlStudentListLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlStudentListLayout.createSequentialGroup()
-                        .addComponent(pnlButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addComponent(lblErrorRequesterName, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(25, 25, 25)
-                                .addComponent(lblErrorItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblErrorDroneId, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                        .addGap(34, 34, 34)
-                                        .addComponent(txtDroneId, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                        .addGap(36, 36, 36)
-                                        .addComponent(txtRequesterName, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(80, 80, 80)
-                                .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(97, 97, 97)
-                                .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                        .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(cmbWeatherCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(88, 88, 88)
-                                        .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtEmergencyContact, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtLoadCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblErrorLoadCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                        .addComponent(lblErrorLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblErrorEmergencyContact, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                .addGap(288, 288, 288)
-                                .addComponent(lblMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(spTblStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 1197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTblStudentTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8350, Short.MAX_VALUE))
-        );
-        pnlStudentListLayout.setVerticalGroup(
-            pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlStudentListLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(lblTblStudentTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spTblStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlStudentListLayout.createSequentialGroup()
-                        .addComponent(lblMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDroneId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmergencyContact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblErrorEmergencyContact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(pnlStudentListLayout.createSequentialGroup()
-                                .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblErrorDroneId, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblErrorLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtRequesterName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtItemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cmbWeatherCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtLoadCapacity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlStudentListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lblErrorRequesterName, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                                .addComponent(lblErrorItemName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lblErrorLoadCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(55, 55, 55))
-                    .addGroup(pnlStudentListLayout.createSequentialGroup()
-                        .addComponent(pnlButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(21, Short.MAX_VALUE))))
-        );
+        btnSort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/collegeapp/resources/sorting.jpg"))); // NOI18N
+        btnSort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortActionPerformed(evt);
+            }
+        });
+        pnlStudentList.add(btnSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 10, 60, 40));
+
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/collegeapp/resources/searching.jpg"))); // NOI18N
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+        pnlStudentList.add(btnSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 10, 60, 40));
 
         tabPaneMain.addTab("Dashboard", pnlStudentList);
 
@@ -576,7 +536,7 @@ public class MediCareDrone extends javax.swing.JFrame {
                 .addComponent(VivaInfoAfter)
                 .addGap(18, 18, 18)
                 .addComponent(lblDashImage, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         formTitle.setFont(new java.awt.Font("Segoe UI", 1, 26)); // NOI18N
@@ -651,14 +611,14 @@ public class MediCareDrone extends javax.swing.JFrame {
                 .addComponent(pnlButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(pnlAdminControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlAdminControlLayout.createSequentialGroup()
+                        .addGap(225, 225, 225)
+                        .addComponent(formTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlAdminControlLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnlAdminControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(spTblStudentVivaList1, javax.swing.GroupLayout.PREFERRED_SIZE, 901, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spTblStudentVivaList, javax.swing.GroupLayout.PREFERRED_SIZE, 901, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(pnlAdminControlLayout.createSequentialGroup()
-                        .addGap(225, 225, 225)
-                        .addComponent(formTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(8429, Short.MAX_VALUE))
+                            .addComponent(spTblStudentVivaList1, javax.swing.GroupLayout.PREFERRED_SIZE, 979, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spTblStudentVivaList, javax.swing.GroupLayout.PREFERRED_SIZE, 979, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(9755, Short.MAX_VALUE))
         );
         pnlAdminControlLayout.setVerticalGroup(
             pnlAdminControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -667,12 +627,10 @@ public class MediCareDrone extends javax.swing.JFrame {
                 .addComponent(formTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(spTblStudentVivaList, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(spTblStudentVivaList1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlAdminControlLayout.createSequentialGroup()
-                .addComponent(pnlButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(37, 37, 37))
+            .addComponent(pnlButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         tabPaneMain.addTab("Launch View", pnlAdminControl);
@@ -762,92 +720,141 @@ public class MediCareDrone extends javax.swing.JFrame {
 
         tabPaneMain.addTab("About Us", pnlAboutUs);
 
-        tblVivaStudentAfterQueue.setBackground(new java.awt.Color(153, 204, 255));
-        tblVivaStudentAfterQueue.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        tblVivaStudentAfterQueue.setModel(new javax.swing.table.DefaultTableModel(
+        pnlVivaList.setBackground(new java.awt.Color(255, 255, 255));
+        pnlVivaList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tblDroneInformation.setBackground(new java.awt.Color(153, 204, 255));
+        tblDroneInformation.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tblDroneInformation.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "LMU ID", "Full Name", "Program", "Contact", "Age"
+                "Drone ID", "Status", "RequesterName", "ItemName", "Location", "EmergencyContact", "WeatherCondition", "LoadCapacity"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblVivaStudentAfterQueue.setGridColor(new java.awt.Color(0, 0, 0));
-        tblVivaStudentAfterQueue.setSelectionBackground(new java.awt.Color(0, 0, 0));
-        tblVivaStudentAfterQueue.setSelectionForeground(new java.awt.Color(234, 192, 32));
-        tblVivaStudentAfterQueue.setShowGrid(true);
-        tblVivaStudentAfterQueue.getTableHeader().setReorderingAllowed(false);
-        spTblStudentViva.setViewportView(tblVivaStudentAfterQueue);
-        if (tblVivaStudentAfterQueue.getColumnModel().getColumnCount() > 0) {
-            tblVivaStudentAfterQueue.getColumnModel().getColumn(0).setResizable(false);
-            tblVivaStudentAfterQueue.getColumnModel().getColumn(1).setResizable(false);
-            tblVivaStudentAfterQueue.getColumnModel().getColumn(2).setResizable(false);
-            tblVivaStudentAfterQueue.getColumnModel().getColumn(3).setResizable(false);
-            tblVivaStudentAfterQueue.getColumnModel().getColumn(4).setResizable(false);
-            tblVivaStudentAfterQueue.getColumnModel().getColumn(4).setPreferredWidth(40);
+        tblDroneInformation.setGridColor(new java.awt.Color(0, 0, 0));
+        tblDroneInformation.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblDroneInformation.setSelectionForeground(new java.awt.Color(234, 192, 32));
+        tblDroneInformation.setShowGrid(true);
+        tblDroneInformation.getTableHeader().setReorderingAllowed(false);
+        spTblStudentViva1.setViewportView(tblDroneInformation);
+        if (tblDroneInformation.getColumnModel().getColumnCount() > 0) {
+            tblDroneInformation.getColumnModel().getColumn(0).setResizable(false);
+            tblDroneInformation.getColumnModel().getColumn(1).setResizable(false);
+            tblDroneInformation.getColumnModel().getColumn(2).setResizable(false);
+            tblDroneInformation.getColumnModel().getColumn(3).setResizable(false);
+            tblDroneInformation.getColumnModel().getColumn(4).setResizable(false);
+            tblDroneInformation.getColumnModel().getColumn(4).setPreferredWidth(40);
         }
 
-        tblVivaStudentQueueList.setBackground(new java.awt.Color(153, 204, 255));
-        tblVivaStudentQueueList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        tblVivaStudentQueueList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        pnlVivaList.add(spTblStudentViva1, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 294, 1175, 323));
 
-            },
-            new String [] {
-                "LMU ID", "Full Name", "Program", "Contact", "Age"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
+        lblSort.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblSort.setText("Sort");
+        pnlVivaList.add(lblSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(247, 25, 66, 27));
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+        lblSearch.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblSearch.setText("Search");
+        pnlVivaList.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(881, 25, 62, 27));
+
+        cmbSortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Title", "Drone ID", "ItemName", "Location" }));
+        cmbSortBy.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "SortBy", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        pnlVivaList.add(cmbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 87, 160, 60));
+
+        cmbSelectionSortingOrder.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
+        cmbSelectionSortingOrder.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Select Sorting Order", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        pnlVivaList.add(cmbSelectionSortingOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 87, 164, 60));
+
+        txtSearchValue.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Enter value to search", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        txtSearchValue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchValueActionPerformed(evt);
             }
         });
-        tblVivaStudentQueueList.setGridColor(new java.awt.Color(0, 0, 0));
-        tblVivaStudentQueueList.setSelectionBackground(new java.awt.Color(0, 0, 0));
-        tblVivaStudentQueueList.setSelectionForeground(new java.awt.Color(234, 192, 32));
-        tblVivaStudentQueueList.setShowGrid(true);
-        tblVivaStudentQueueList.getTableHeader().setReorderingAllowed(false);
-        spTblStudentViva1.setViewportView(tblVivaStudentQueueList);
-        if (tblVivaStudentQueueList.getColumnModel().getColumnCount() > 0) {
-            tblVivaStudentQueueList.getColumnModel().getColumn(0).setResizable(false);
-            tblVivaStudentQueueList.getColumnModel().getColumn(1).setResizable(false);
-            tblVivaStudentQueueList.getColumnModel().getColumn(2).setResizable(false);
-            tblVivaStudentQueueList.getColumnModel().getColumn(3).setResizable(false);
-            tblVivaStudentQueueList.getColumnModel().getColumn(4).setResizable(false);
-            tblVivaStudentQueueList.getColumnModel().getColumn(4).setPreferredWidth(40);
-        }
+        pnlVivaList.add(txtSearchValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(679, 84, 180, 60));
 
-        javax.swing.GroupLayout pnlVivaListLayout = new javax.swing.GroupLayout(pnlVivaList);
-        pnlVivaList.setLayout(pnlVivaListLayout);
-        pnlVivaListLayout.setHorizontalGroup(
-            pnlVivaListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlVivaListLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(pnlVivaListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(spTblStudentViva, javax.swing.GroupLayout.DEFAULT_SIZE, 1048, Short.MAX_VALUE)
-                    .addComponent(spTblStudentViva1))
-                .addContainerGap(8487, Short.MAX_VALUE))
+        cmbSearchBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Title", "Drone ID", "ItemName", "Location" }));
+        cmbSearchBy.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search By", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        pnlVivaList.add(cmbSearchBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 85, 170, 60));
+
+        btnViewDetails.setText("View Details");
+        btnViewDetails.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewDetailsActionPerformed(evt);
+            }
+        });
+        pnlVivaList.add(btnViewDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 265, -1, -1));
+
+        lblDroneInformation.setBackground(new java.awt.Color(51, 51, 51));
+        lblDroneInformation.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
+        lblDroneInformation.setForeground(new java.awt.Color(102, 102, 102));
+        lblDroneInformation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDroneInformation.setText("Drone Information Collection");
+        pnlVivaList.add(lblDroneInformation, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 260, 1030, -1));
+
+        btnSorting.setBackground(new java.awt.Color(255, 153, 153));
+        btnSorting.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSorting.setForeground(new java.awt.Color(255, 255, 255));
+        btnSorting.setText("Sort");
+        btnSorting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortingActionPerformed(evt);
+            }
+        });
+        pnlVivaList.add(btnSorting, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 159, 203, 47));
+
+        btnSearching.setBackground(new java.awt.Color(51, 153, 255));
+        btnSearching.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSearching.setForeground(new java.awt.Color(255, 255, 255));
+        btnSearching.setText("Search");
+        btnSearching.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchingActionPerformed(evt);
+            }
+        });
+        pnlVivaList.add(btnSearching, new org.netbeans.lib.awtextra.AbsoluteConstraints(828, 159, 208, 48));
+
+        jToolBar1.setBackground(new java.awt.Color(51, 153, 255));
+        jToolBar1.setRollover(true);
+
+        jtoolRedColor.setBackground(new java.awt.Color(255, 153, 153));
+        jtoolRedColor.setRollover(true);
+
+        jtoolRedColor1.setBackground(new java.awt.Color(255, 153, 153));
+        jtoolRedColor1.setRollover(true);
+        jtoolRedColor.add(jtoolRedColor1);
+
+        javax.swing.GroupLayout pnlBackgroundColorLayout = new javax.swing.GroupLayout(pnlBackgroundColor);
+        pnlBackgroundColor.setLayout(pnlBackgroundColorLayout);
+        pnlBackgroundColorLayout.setHorizontalGroup(
+            pnlBackgroundColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBackgroundColorLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jtoolRedColor, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
         );
-        pnlVivaListLayout.setVerticalGroup(
-            pnlVivaListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlVivaListLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(spTblStudentViva1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 279, Short.MAX_VALUE)
-                .addComponent(spTblStudentViva, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+        pnlBackgroundColorLayout.setVerticalGroup(
+            pnlBackgroundColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBackgroundColorLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(pnlBackgroundColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtoolRedColor, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(167, Short.MAX_VALUE))
         );
+
+        pnlVivaList.add(pnlBackgroundColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 1170, 210));
 
         tabPaneMain.addTab("Drone List", pnlVivaList);
 
@@ -909,8 +916,8 @@ public class MediCareDrone extends javax.swing.JFrame {
 
         lblLoginError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblLoginError.setForeground(new java.awt.Color(255, 0, 0));
-        lblLoginError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlLoginScreen.add(lblLoginError, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 380, 410, 22));
+        lblLoginError.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        pnlLoginScreen.add(lblLoginError, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 380, 320, 22));
 
         lblSlogan.setBackground(new java.awt.Color(255, 255, 255));
         lblSlogan.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
@@ -969,6 +976,11 @@ public class MediCareDrone extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 // Method to set up the CardLayout and add panels
 
+    /**
+     * Sets up the CardLayout for the MediCareDrone GUI, adding panels for
+     * different screens (loading, login, and main). Starts with the loading
+     * screen visible.
+     */
     private void initializeLayout() {
         cardLayout = new java.awt.CardLayout();
         getContentPane().setLayout(cardLayout);
@@ -982,28 +994,50 @@ public class MediCareDrone extends javax.swing.JFrame {
         cardLayout.show(getContentPane(), "LoadingScreen");
     }
 
+    /**
+     * Initializes the drone data, including creating a list of drone models and
+     * setting up the table model with updated column names. Adds example drone
+     * data to populate the table.
+     */
     // Method to initialize data, including student list and table
     private void initializeData() {
         droneList = new LinkedList<>();
 
-    // Create a table model with updated column names
-    DefaultTableModel model = new DefaultTableModel(
-        new Object[][]{}, // No initial data
-        new String[]{ // Updated column names
-            "Drone ID", "Status", "RequesterName", 
-            "ItemName", "Location", "EmergencyContact", 
-            "WeatherCondition", "LoadCapacity(kg)"
-        }
-    );
-    tblDrone.setModel(model);
+        // Create a table model with updated column names
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[][]{}, // No initial data
+                new String[]{ // Updated column names
+                    "Drone ID", "Status", "RequesterName",
+                    "ItemName", "Location", "EmergencyContact",
+                    "WeatherCondition", "LoadCapacity(kg)"
+                }
+        );
+        tblDrone.setModel(model);
 
-    // Example data for the updated table
-    registerDrone(new DroneModel(23092873, "Active", "John Doe", "First Aid Kit", 
-        "Kathmandu Nepal", "9876938467", "Sunny", 5.5));
-    registerDrone(new DroneModel(23048593, "Deployed", "Jane Smith", "Medicine", 
-        "Pokhara Nepal", "9873673826", "Rainy", 10.0));
+        // Example data for the updated table
+        registerDrone(new DroneModel(23048599, "Deployed", "David Miller", "Medical Equipment",
+                "Bharatpur", "9823456789", "Overcast", 11.5));
+        registerDrone(new DroneModel(23048592, "Deployed", "Jane Smith", "Medicine",
+                "Pokhara", "9873673826", "Rainy", 10.0));
+        registerDrone(new DroneModel(23048598, "Active", "Maya Tamang", "Surgical Supplies",
+                "Nepalgunj", "9856789012", "Clear", 9.0));
+        registerDrone(new DroneModel(23048593, "Deployed", "Suman Lama", "Blood bag",
+                "Sindhuli", "9803729956", "Cloudy", 12));
+        registerDrone(new DroneModel(23048596, "Standby", "Priya Sharma", "Emergency Kit",
+                "Biratnagar", "9867543210", "Foggy", 6.5));
+        registerDrone(new DroneModel(23048597, "Deployed", "Alex Chen", "Oxygen Cylinders",
+                "Dharan", "9834567890", "Partly Cloudy", 15.0));
+        registerDrone(new DroneModel(23048595, "Maintenance", "Sarah Wilson", "Vaccines",
+                "Butwal", "9812345678", "Windy", 7.0));
+        registerDrone(new DroneModel(23048591, "Active", "John Doe", "First Aid Kit",
+                "Kathmandu", "9876938467", "Sunny", 5.5));
     }
-    
+
+    /**
+     * Simulates a loading progress by updating a progress bar over time. Runs
+     * in a background thread to avoid blocking the UI, and transitions to the
+     * login screen once the progress reaches 100%.
+     */
     // Method to simulate loading progress
     private void startProgress() {
         javax.swing.SwingWorker<Void, Integer> worker = new javax.swing.SwingWorker<>() {
@@ -1030,23 +1064,45 @@ public class MediCareDrone extends javax.swing.JFrame {
         worker.execute();
     }
 
-    // Method to add student data and populate the table
+    /**
+     * Adds a drone's data to the drone list and updates the table with the
+     * drone's details. This method populates the table with new drone
+     * information, including the drone ID, status, requester name, item name,
+     * location, emergency contact, weather condition, and load capacity.
+     *
+     * @param drone The DroneModel object containing the drone's information.
+     */
+    // Method to add drone data and populate the table
     private void registerDrone(DroneModel student) {
         droneList.add(student);
         DefaultTableModel model = (DefaultTableModel) tblDrone.getModel();
         model.addRow(new Object[]{
-            student.getDroneId(), student.getStatus(), student.getRequesterName(), 
-            student.getItemName(), student.getLocation(), student.getEmergencyContact(), 
+            student.getDroneId(), student.getStatus(), student.getRequesterName(),
+            student.getItemName(), student.getLocation(), student.getEmergencyContact(),
             student.getWeatherCondition(), student.getLoadCapacity()
         });
     }
-    
-    
+
+    /**
+     * Switches the current screen to the specified screen using CardLayout. The
+     * method displays the screen identified by the provided screen name.
+     *
+     * @param screenName The name of the screen to be displayed (e.g.,
+     * "LoadingScreen", "LoginScreen").
+     */
     // Method to switch screens
     private void loadScreen(String screenName) {
         cardLayout.show(getContentPane(), screenName);
     }
 
+    /**
+     * Action event handler for the Login button. This method processes the
+     * login attempt by verifying the entered username and password. If the
+     * credentials are correct, it switches to the main screen; otherwise, it
+     * shows an error message.
+     *
+     * @param evt The event triggered by the Login button click.
+     */
     //Action event for Login button
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // Get the username and password input
@@ -1066,7 +1122,14 @@ public class MediCareDrone extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    
+    /**
+     * Action event handler for the Logout button. This method clears the
+     * username and password fields and switches the screen back to the Login
+     * screen. It simulates logging out by resetting the login form and loading
+     * the login screen.
+     *
+     * @param evt The event triggered by the Logout button click.
+     */
     //Action event for Logout button
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         pwdFldLogin.setText("");
@@ -1078,455 +1141,251 @@ public class MediCareDrone extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_pwdFldLoginActionPerformed
 
-    
-    
-    
-    
-    
-    
-    
     private void txtFldLoginUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldLoginUsernameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFldLoginUsernameActionPerformed
 
+    /**
+     * Action event handler for the Supply button. This method transfers drone
+     * data from the main drone table (tblDrone) to the inspection list table
+     * (tblDroneInspectionList) and enqueues the drone objects into the
+     * inspection queue. It prompts the user for confirmation before performing
+     * the action.
+     *
+     * The method performs the following: 1. Prompts the user with a
+     * confirmation dialog before transferring data. 2. Clears any existing data
+     * in the inspection list table to avoid duplicates. 3. Copies each row from
+     * the drone table to the inspection list table. 4. Creates a DroneModel
+     * object for each row and enqueues it to the inspection queue. 5. Displays
+     * a success message upon successful data transfer. 6. Cancels the action if
+     * the user selects 'No' in the confirmation dialog.
+     *
+     * @param evt The event triggered by the Supply button click.
+     */
     private void btnSupplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplyActionPerformed
         // TODO add your handling code here:
         // Get the table models for tblDrone and tblDroneInspectionList
         lblErrorDroneId.setText("");
-    int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to transfer data to the Inspection List?", 
-            "Confirm Action", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
-    
-    // If user selects 'Yes' (response = JOptionPane.YES_OPTION)
-    if (response == JOptionPane.YES_OPTION) {
-        
-    
-    DefaultTableModel droneModel = (DefaultTableModel) tblDrone.getModel();
-    DefaultTableModel inspectionModel = (DefaultTableModel) tblStudentVivaList.getModel();
+        int response = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to transfer data to the Inspection List?",
+                "Confirm Action",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
-    // Clear existing rows in tblDroneInspectionList to avoid duplicates
-    inspectionModel.setRowCount(0);
+        // If user selects 'Yes' (response = JOptionPane.YES_OPTION)
+        if (response == JOptionPane.YES_OPTION) {
 
-    // Loop through rows in tblDrone and copy to tblDroneInspectionList
-    for (int i = 0; i < droneModel.getRowCount(); i++) {
-        Object[] rowData = new Object[droneModel.getColumnCount()];
-        for (int j = 0; j < droneModel.getColumnCount(); j++) {
-            rowData[j] = droneModel.getValueAt(i, j); // Copy cell data
+            DefaultTableModel droneModel = (DefaultTableModel) tblDrone.getModel();
+            DefaultTableModel inspectionModel = (DefaultTableModel) tblStudentVivaList.getModel();
+
+            // Clear existing rows in tblDroneInspectionList to avoid duplicates
+            inspectionModel.setRowCount(0);
+
+            // Loop through rows in tblDrone and copy to tblDroneInspectionList
+            for (int i = 0; i < droneModel.getRowCount(); i++) {
+                Object[] rowData = new Object[droneModel.getColumnCount()];
+                for (int j = 0; j < droneModel.getColumnCount(); j++) {
+                    rowData[j] = droneModel.getValueAt(i, j); // Copy cell data
+                }
+                inspectionModel.addRow(rowData); // Add the row to tblDroneInspectionList
+
+                // Create a DroneModel object and enqueue to inspectQueue
+                DroneModel drone = new DroneModel(
+                        (int) droneModel.getValueAt(i, 0),
+                        (String) droneModel.getValueAt(i, 1),
+                        (String) droneModel.getValueAt(i, 2),
+                        (String) droneModel.getValueAt(i, 3),
+                        (String) droneModel.getValueAt(i, 4),
+                        (String) droneModel.getValueAt(i, 5),
+                        (String) droneModel.getValueAt(i, 6),
+                        (double) droneModel.getValueAt(i, 7)
+                );
+                vivaQueue.enQueue(drone);  // Enqueue the drone to the queue
+            }
+
+            // Show a confirmation dialog to the user
+            lblErrorDroneId.setText("Data successfully transferred to Inspection List!");
+            lblErrorDroneId.setForeground(Color.BLUE); // Set error color to blue
+        } else {
+            // If the user selects 'No', no functionality is performed
+            JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
-        inspectionModel.addRow(rowData); // Add the row to tblDroneInspectionList
-        
-        // Create a DroneModel object and enqueue to inspectQueue
-        DroneModel drone = new DroneModel(
-            (int) droneModel.getValueAt(i, 0),
-            (String) droneModel.getValueAt(i, 1),
-            (String) droneModel.getValueAt(i, 2),
-            (String) droneModel.getValueAt(i, 3),
-            (String) droneModel.getValueAt(i, 4),
-            (String) droneModel.getValueAt(i, 5),
-            (String) droneModel.getValueAt(i, 6),
-            (double) droneModel.getValueAt(i, 7)
-        );
-        vivaQueue.enQueue(drone);  // Enqueue the drone to the queue
-    }
-
-    // Show a confirmation dialog to the user
-    lblErrorDroneId.setText("Data successfully transferred to Inspection List!");
-    lblErrorDroneId.setForeground(Color.BLUE); // Set error color to blue
-    }else {
-        // If the user selects 'No', no functionality is performed
-        JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-    }
     }//GEN-LAST:event_btnSupplyActionPerformed
 
-    
+    /**
+     * Action event handler for the Remove button. This method prompts the user
+     * for confirmation before removing the selected drone from the drone table
+     * (tblDrone) and the associated drone list (droneList). It provides
+     * feedback messages based on whether the removal was successful or if no
+     * drone was selected.
+     *
+     * The method performs the following: 1. Prompts the user with a
+     * confirmation dialog before proceeding with the removal. 2. Checks if a
+     * row is selected in the drone table. 3. If a row is selected, it removes
+     * the corresponding drone from the list and table. 4. Displays a success
+     * message if the drone is removed successfully. 5. Displays an error
+     * message if no drone is selected for removal. 6. Cancels the action if the
+     * user selects 'No' in the confirmation dialog.
+     *
+     * @param evt The event triggered by the Remove button click.
+     */
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
         // TODO add your handling code here:
         // Show confirmation dialog
-    lblErrorDroneId.setText("");
-    int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to remove this drone?", 
-            "Confirm Action", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
-    
-    // If user selects 'Yes'
-    if (response == JOptionPane.YES_OPTION) {
-        int selectedRow = tblDrone.getSelectedRow(); // Get selected row
-        
-        if (selectedRow != -1) { // Check if a row is selected
-            // Remove data from the studentList
-            droneList.remove(selectedRow);
+        lblErrorDroneId.setText("");
+        lblMessage.setText("");
+        int response = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to remove this drone?",
+                "Confirm Action",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
-            // Remove data from the table
-            DefaultTableModel model = (DefaultTableModel) tblDrone.getModel();
-            model.removeRow(selectedRow);
+        // If user selects 'Yes'
+        if (response == JOptionPane.YES_OPTION) {
+            int selectedRow = tblDrone.getSelectedRow(); // Get selected row
 
-            lblErrorDroneId.setText("Drone removed successfully.");
-            lblErrorDroneId.setForeground(Color.BLUE);
-        } else {
-            lblErrorDroneId.setText("No drone selected for removal!");
-            lblErrorDroneId.setForeground(Color.RED);
-        }
-    } else {
-        JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-    }
-        
-    }//GEN-LAST:event_btnRemoveActionPerformed
+            if (selectedRow != -1) { // Check if a row is selected
+                // Remove data from the studentList
+                droneList.remove(selectedRow);
 
-    
-    
-    private boolean isDroneIdExists(int droneId) {
-    // Replace 'droneList' with the actual list or database storing drone data
-    for (DroneModel drone : droneList) { 
-        if (drone.getDroneId() == droneId) {
-            return true; // Drone ID already exists
-        }
-    }
-    return false; // Drone ID is unique
-    }
+                // Remove data from the table
+                DefaultTableModel model = (DefaultTableModel) tblDrone.getModel();
+                model.removeRow(selectedRow);
 
-    
-    
-        
-private void highlightInvalidField(JTextField textField, String title, Color color) {
-    // Create titled border
-    TitledBorder titledBorder = BorderFactory.createTitledBorder(
-        BorderFactory.createLineBorder(color, 1), // Border with desired color
-        title,
-        TitledBorder.DEFAULT_JUSTIFICATION,
-        TitledBorder.TOP, // Position the title at the top
-        new Font("Segoe UI", Font.BOLD, 14), // Made font bold and size 14 to match resetFieldBorderWithTitle
-        color
-    );
-    
-    // Set border padding
-    Border padding = BorderFactory.createEmptyBorder(2, 5, 2, 5);
-    
-    // Combine borders
-    textField.setBorder(BorderFactory.createCompoundBorder(titledBorder, padding));
-    
-    // Set size
-    textField.setPreferredSize(new Dimension(150, 45));
-    
-    // Prevent layout issues
-    textField.revalidate();
-    textField.repaint();
-}
-
-    
-    
-private void resetFieldBorderWithTitle(JTextField textField, String title) {
-    // Create titled border
-    TitledBorder titledBorder = BorderFactory.createTitledBorder(
-        BorderFactory.createLineBorder(new Color(140,140,140), 1), // Border color
-        title,
-        TitledBorder.DEFAULT_JUSTIFICATION,
-        TitledBorder.TOP, // Position the title at the top
-        new Font("Segoe UI", Font.BOLD, 14), // Changed to plain font, smaller size
-        new Color(26, 82, 117) // Title color matches border color
-    );
-    
-    // Set border padding
-    Border padding = BorderFactory.createEmptyBorder(2, 5, 2, 5);
-    
-    // Combine borders
-    textField.setBorder(BorderFactory.createCompoundBorder(titledBorder, padding));
-    
-    // Set size
-    textField.setPreferredSize(new Dimension(150, 45));
-    
-    // Refresh the component
-    textField.revalidate();
-    textField.repaint();
-}
-    
-    
-   
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
-        
-        // Show confirmation dialog
-    int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to proceed?", 
-            "Confirm Action", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
-
-    // If user selects 'Yes'
-    if (response == JOptionPane.YES_OPTION) {
-        // Get input data
-        String droneId = txtDroneId.getText(); 
-        String status = cmbStatus.getSelectedItem().toString(); 
-        String requesterName = txtRequesterName.getText(); 
-        String itemName = txtItemName.getText(); 
-        String location = txtLocation.getText(); 
-        String emergencyContact = txtEmergencyContact.getText(); 
-        String weatherCondition = cmbWeatherCondition.getSelectedItem().toString(); 
-        String loadCapacity = txtLoadCapacity.getText(); 
-
-        // Validation check
-        boolean isValid = true; // Flag to check overall validation
-        
-        if (!ValidationUtil.isValidDroneId(droneId, lblErrorDroneId)) {
-            isValid = false;
-            highlightInvalidField(txtDroneId,"DroneID", Color.RED);
-
-        }else {
-            resetFieldBorderWithTitle(txtDroneId, "DroneID");
-            lblErrorDroneId.setText("");
-        }
-
-        
-        if (!ValidationUtil.isValidRequesterName(requesterName, lblErrorRequesterName)) {
-            isValid = false;
-            highlightInvalidField(txtRequesterName,"RequesterName", Color.RED);
-
-        }else {
-            resetFieldBorderWithTitle(txtRequesterName, "RequesterName");
-            lblErrorRequesterName.setText("");
-        }
-        
-        
-        if (!ValidationUtil.isValidLocation(location, lblErrorLocation)) {
-            isValid = false;
-            highlightInvalidField(txtLocation,"Location", Color.RED);
-
-        }else {
-            resetFieldBorderWithTitle(txtLocation, "Location");
-            lblErrorLocation.setText("");
-        }
-        
-        
-        if (!ValidationUtil.isValidItemName(itemName, lblErrorItemName)) {
-            isValid = false;
-            highlightInvalidField(txtItemName,"ItemName", Color.RED);
-
-        }else {
-            resetFieldBorderWithTitle(txtItemName, "ItemName");
-            lblErrorItemName.setText("");
-        }
-        
-        
-        if (!ValidationUtil.isValidEmergencyContact(emergencyContact, lblErrorEmergencyContact)) {
-            isValid = false;
-            highlightInvalidField(txtEmergencyContact,"EmergencyContact", Color.RED);
-
-        }else {
-            resetFieldBorderWithTitle(txtEmergencyContact, "EmergencyContact");
-            lblErrorEmergencyContact.setText("");
-        }
-        
-        
-        
-        if (!ValidationUtil.isValidLoadCapacity(loadCapacity, lblErrorLoadCapacity)) {
-            isValid = false;
-            highlightInvalidField(txtLoadCapacity,"LoadCapacity(kg)", Color.RED);
-
-        }else {
-            resetFieldBorderWithTitle(txtLoadCapacity, "LoadCapacity(kg)");
-            lblErrorLoadCapacity.setText("");
-        }
-        
-       //clear textfield
-       
-       
-       
-       
-       
-        
-
-        if (isValid) {
-            lblErrorDroneId.setText("");
-
-            int droneIdValue = Integer.parseInt(droneId); // Convert droneId to int
-
-            // Check if droneID already exists
-            if (isDroneIdExists(droneIdValue)) { // Call the method to check duplicate IDs
-                lblMessage.setText("DroneID "+ droneId +" already exists and cannot be added!");
-                lblMessage.setForeground(Color.RED);
-
-            } else {
-                // Create a new DroneModel
-                double loadCapacityValue = Double.parseDouble(loadCapacity);
-                DroneModel drone = new DroneModel(droneIdValue, status, requesterName, itemName, location, emergencyContact, weatherCondition, loadCapacityValue);
-
-                // Register the drone
-                registerDrone(drone);
-
-                lblMessage.setText("Your data has been successfully added.");
+                lblMessage.setText("Drone removed successfully.");
                 lblMessage.setForeground(Color.BLUE);
+            } else {
+                lblMessage.setText("No drone selected for removal!");
+                lblMessage.setForeground(Color.RED);
             }
         } else {
-            lblMessage.setText("Please enter valid data for all fields.");
-            lblMessage.setForeground(Color.RED);
-            //JOptionPane.showMessageDialog(this, "Please enter valid data for all fields.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-    }
-    }//GEN-LAST:event_btnAddActionPerformed
 
-    
+    }//GEN-LAST:event_btnRemoveActionPerformed
 
-    
-    
-    
-    
-    
-    
-    private final CustomQueue vivaQueue = new CustomQueue(100); // Assuming a capacity of 100.
-    private void btnLaunchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaunchActionPerformed
-        // TODO add your handling code here:
-        // Check if there are drones in the queue
-        lblErrorDroneId.setText("");
-    int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to launch the next drone?", 
-            "Confirm Launch", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
-    
-    // If user selects 'Yes' (response = JOptionPane.YES_OPTION)
-    if (response == JOptionPane.YES_OPTION) {
-        
-        
-    if (!vivaQueue.isEmpty()) {
-        // Dequeue the first drone from deployQueue
-        DroneModel drone = vivaQueue.deQueue();
-
-        // Add the drone to tblDroneAfterDeploymentList
-        DefaultTableModel modelAfterDeployment = (DefaultTableModel) tblStudentAfterVivaList.getModel();
-        modelAfterDeployment.addRow(new Object[]{
-            drone.getDroneId(), drone.getStatus(), drone.getRequesterName(),
-            drone.getItemName(), drone.getLocation(), drone.getEmergencyContact(),
-            drone.getWeatherCondition(), drone.getLoadCapacity()
-        });
-
-        // Remove the first row from tblDroneInspectionList
-        DefaultTableModel modelInspectionList = (DefaultTableModel) tblStudentVivaList.getModel();
-        if (modelInspectionList.getRowCount() > 0) {
-            modelInspectionList.removeRow(0); // Removes the first row from tblDroneInspectionList
+    /**
+     * Checks if a drone ID already exists in the list of drones. This method
+     * iterates through the drone list and checks if the provided drone ID
+     * matches any existing drone's ID. It returns `true` if the drone ID
+     * exists, and `false` if it does not.
+     *
+     * @param droneId The drone ID to check for existence.
+     * @return boolean Returns true if the drone ID exists, false if it is
+     * unique.
+     */
+    private boolean isDroneIdExists(int droneId) {
+        // Replace 'droneList' with the actual list or database storing drone data
+        for (DroneModel drone : droneList) {
+            if (drone.getDroneId() == droneId) {
+                return true; // Drone ID already exists
+            }
         }
-        
-        lblErrorDroneId.setText("Drone has been successfully launched.");
-        lblErrorDroneId.setForeground(Color.BLUE); // Set error color to blue
-    } else {
-        // If the queue is empty, show a message
-        JOptionPane.showMessageDialog(this, "No more drones in the deployment queue.", "Queue Empty", JOptionPane.INFORMATION_MESSAGE);
+        return false; // Drone ID is unique
     }
-    }else {
-        // If the user selects 'No', no functionality is performed
-        JOptionPane.showMessageDialog(this, "Launch action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    }//GEN-LAST:event_btnLaunchActionPerformed
 
-    
-    private void txtEmergencyContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmergencyContactActionPerformed
+    /**
+     * Highlights an invalid text field by changing its border and title color.
+     * This method applies a titled border with a specified color and title to
+     * the given JTextField, indicating that the field is invalid. It also sets
+     * the text field's size and ensures it is properly revalidated and
+     * repainted.
+     *
+     * @param textField The JTextField to highlight.
+     * @param title The title to display in the border, typically an error
+     * message or field name.
+     * @param color The color of the border and title, typically indicating an
+     * error (e.g., red for invalid).
+     */
+    private void highlightInvalidField(JTextField textField, String title, Color color) {
+        // Create titled border
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(color, 1), // Border with desired color
+                title,
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.TOP, // Position the title at the top
+                new Font("Segoe UI", Font.BOLD, 14), // Made font bold and size 14 to match resetFieldBorderWithTitle
+                color
+        );
+
+        // Set border padding
+        Border padding = BorderFactory.createEmptyBorder(2, 5, 2, 5);
+
+        // Combine borders
+        textField.setBorder(BorderFactory.createCompoundBorder(titledBorder, padding));
+
+        // Set size
+        textField.setPreferredSize(new Dimension(150, 45));
+
+        // Prevent layout issues
+        textField.revalidate();
+        textField.repaint();
+    }
+
+    /**
+     * Resets the border and title of a text field to its default state. This
+     * method applies a titled border with a specified title and color to the
+     * given JTextField, typically used when the field is valid or cleared. It
+     * also adjusts the size of the text field to ensure proper layout and
+     * refreshes the component to reflect the changes.
+     *
+     * @param textField The JTextField to reset the border and title for.
+     * @param title The title to display in the border, typically the field
+     * name.
+     */
+    private void resetFieldBorderWithTitle(JTextField textField, String title) {
+        // Create titled border
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(140, 140, 140), 1), // Border color
+                title,
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.TOP, // Position the title at the top
+                new Font("Segoe UI", Font.BOLD, 14), // Changed to plain font, smaller size
+                new Color(26, 82, 117) // Title color matches border color
+        );
+
+        // Set border padding
+        Border padding = BorderFactory.createEmptyBorder(2, 5, 2, 5);
+
+        // Combine borders
+        textField.setBorder(BorderFactory.createCompoundBorder(titledBorder, padding));
+
+        // Set size
+        textField.setPreferredSize(new Dimension(150, 45));
+
+        // Refresh the component
+        textField.revalidate();
+        textField.repaint();
+    }
+
+    /**
+     * Handles the action of adding a new drone by validating the input fields
+     * and ensuring there are no duplicates in the system. If the data is valid,
+     * the drone is added to the list and the user is notified of the success.
+     * If the data is invalid, the user is prompted with error messages.
+     *
+     * @param evt The action event triggered when the "Add" button is clicked.
+     */
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmergencyContactActionPerformed
 
-    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        // TODO add your handling code here:
-        // Clear all text fields
-        lblErrorDroneId.setText("");
-    int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to clear all fields?", 
-            "Confirm Action", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
-    
-    // If user selects 'Yes' (response = JOptionPane.YES_OPTION)
-    if (response == JOptionPane.YES_OPTION) {
-        
-        
-        
-    txtDroneId.setText("");
-    txtLoadCapacity.setText("");
-    txtItemName.setText("");
-    cmbWeatherCondition.setSelectedIndex(0);
-    txtLocation.setText("");
-    txtEmergencyContact.setText("");
-    txtRequesterName.setText("");
-    cmbWeatherCondition.setSelectedIndex(0);
-    
-    // Show a success message
-        lblMessage.setText("All fields have been cleared");
-        lblMessage.setForeground(Color.BLUE);
-    
-    
-    }else {
-        // If the user selects 'No', no functionality is performed
-        JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    }//GEN-LAST:event_btnClearActionPerformed
-
-    private void btnHomeExploreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeExploreActionPerformed
-        // TODO add your handling code here:
-        // Switch the currently selected tab to the pnlAboutUs panel
-        tabPaneMain.setSelectedComponent(pnlAboutUs);
-    }//GEN-LAST:event_btnHomeExploreActionPerformed
-
-    private void tblDroneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDroneMouseClicked
-        // TODO add your handling code here:
-        tblDrone.addMouseListener(new java.awt.event.MouseAdapter() {
-    public void mouseClicked(java.awt.event.MouseEvent evt) {
-        tblDrone.setSelectionBackground(new Color(173, 216, 230)); // Light Blue color
-        tblDrone.setSelectionForeground(Color.BLACK); // Black text for selection
-        int selectedRow = tblDrone.getSelectedRow();
-        if (selectedRow != -1) {
-            txtDroneId.setText(tblDrone.getValueAt(selectedRow, 0).toString());
-            cmbStatus.setSelectedItem(tblDrone.getValueAt(selectedRow, 1).toString()); // For JComboBox
-
-            //txtStatus1.setText(tblStudent.getValueAt(selectedRow, 1).toString());
-            txtRequesterName.setText(tblDrone.getValueAt(selectedRow, 2).toString());
-            txtItemName.setText(tblDrone.getValueAt(selectedRow, 3).toString());
-            txtLocation.setText(tblDrone.getValueAt(selectedRow, 4).toString());
-            txtEmergencyContact.setText(tblDrone.getValueAt(selectedRow, 5).toString());
-            cmbWeatherCondition.setSelectedItem(tblDrone.getValueAt(selectedRow, 6).toString());
-
-            //txtWeatherCondition.setText(tblStudent.getValueAt(selectedRow, 6).toString());
-            txtLoadCapacity.setText(tblDrone.getValueAt(selectedRow, 7).toString());
-        }
-    }
-    });
-    }//GEN-LAST:event_tblDroneMouseClicked
-
-    
-    
-    
-    private boolean isDroneIdExistsForUpdate(int droneId, int currentRow) {
-    for (int i = 0; i < droneList.size(); i++) {
-        if (i != currentRow && droneList.get(i).getDroneId() == droneId) { 
-            return true; // Drone ID already exists in another row
-        }
-    }
-    return false; // Drone ID is unique for update
-    }
-
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        // TODO add your handling code here:
         // Show confirmation dialog
-    int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to update the selected drone's data?", 
-            "Confirm Update", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
-    
-    // If user selects 'Yes'
-    if (response == JOptionPane.YES_OPTION) {
-        int selectedRow = tblDrone.getSelectedRow();
-        if (selectedRow != -1) {
-            // Get updated values from text fields
+        int response = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to proceed?",
+                "Confirm Action",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        // If user selects 'Yes'
+        if (response == JOptionPane.YES_OPTION) {
+            // Get input data
             String droneId = txtDroneId.getText();
-            String status = cmbStatus.getSelectedItem().toString(); 
+            String status = cmbStatus.getSelectedItem().toString();
             String requesterName = txtRequesterName.getText();
             String itemName = txtItemName.getText();
             String location = txtLocation.getText();
             String emergencyContact = txtEmergencyContact.getText();
-            String weatherCondition = cmbWeatherCondition.getSelectedItem().toString(); 
+            String weatherCondition = cmbWeatherCondition.getSelectedItem().toString();
             String loadCapacity = txtLoadCapacity.getText();
 
             // Validation check
@@ -1535,6 +1394,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
             if (!ValidationUtil.isValidDroneId(droneId, lblErrorDroneId)) {
                 isValid = false;
                 highlightInvalidField(txtDroneId, "DroneID", Color.RED);
+
             } else {
                 resetFieldBorderWithTitle(txtDroneId, "DroneID");
                 lblErrorDroneId.setText("");
@@ -1543,6 +1403,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
             if (!ValidationUtil.isValidRequesterName(requesterName, lblErrorRequesterName)) {
                 isValid = false;
                 highlightInvalidField(txtRequesterName, "RequesterName", Color.RED);
+
             } else {
                 resetFieldBorderWithTitle(txtRequesterName, "RequesterName");
                 lblErrorRequesterName.setText("");
@@ -1551,6 +1412,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
             if (!ValidationUtil.isValidLocation(location, lblErrorLocation)) {
                 isValid = false;
                 highlightInvalidField(txtLocation, "Location", Color.RED);
+
             } else {
                 resetFieldBorderWithTitle(txtLocation, "Location");
                 lblErrorLocation.setText("");
@@ -1559,6 +1421,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
             if (!ValidationUtil.isValidItemName(itemName, lblErrorItemName)) {
                 isValid = false;
                 highlightInvalidField(txtItemName, "ItemName", Color.RED);
+
             } else {
                 resetFieldBorderWithTitle(txtItemName, "ItemName");
                 lblErrorItemName.setText("");
@@ -1567,6 +1430,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
             if (!ValidationUtil.isValidEmergencyContact(emergencyContact, lblErrorEmergencyContact)) {
                 isValid = false;
                 highlightInvalidField(txtEmergencyContact, "EmergencyContact", Color.RED);
+
             } else {
                 resetFieldBorderWithTitle(txtEmergencyContact, "EmergencyContact");
                 lblErrorEmergencyContact.setText("");
@@ -1575,6 +1439,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
             if (!ValidationUtil.isValidLoadCapacity(loadCapacity, lblErrorLoadCapacity)) {
                 isValid = false;
                 highlightInvalidField(txtLoadCapacity, "LoadCapacity(kg)", Color.RED);
+
             } else {
                 resetFieldBorderWithTitle(txtLoadCapacity, "LoadCapacity(kg)");
                 lblErrorLoadCapacity.setText("");
@@ -1583,58 +1448,657 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
             if (isValid) {
                 lblErrorDroneId.setText("");
 
-                int droneIdValue = Integer.parseInt(droneId);
+                int droneIdValue = Integer.parseInt(droneId); // Convert droneId to int
 
-                // Check if the updated Drone ID already exists, excluding the current row
-                if (isDroneIdExistsForUpdate(droneIdValue, selectedRow)) {
-                    lblMessage.setText("DroneID " + droneId + " already exists and cannot be updated!");
-                    lblMessage.setForeground(Color.BLUE);
+                // Check if droneID already exists
+                if (isDroneIdExists(droneIdValue)) { // Call the method to check duplicate IDs
+                    lblMessage.setText("DroneID " + droneId + " already exists and cannot be added!");
+                    lblMessage.setForeground(Color.RED);
+
                 } else {
-                    // Update the table
-                    tblDrone.setValueAt(droneId, selectedRow, 0);
-                    tblDrone.setValueAt(cmbStatus.getSelectedItem().toString(), selectedRow, 1); 
-                    tblDrone.setValueAt(requesterName, selectedRow, 2);
-                    tblDrone.setValueAt(itemName, selectedRow, 3);
-                    tblDrone.setValueAt(location, selectedRow, 4);
-                    tblDrone.setValueAt(emergencyContact, selectedRow, 5);
-                    tblDrone.setValueAt(cmbWeatherCondition.getSelectedItem().toString(), selectedRow, 6);
-                    tblDrone.setValueAt(loadCapacity, selectedRow, 7);
+                    // Create a new DroneModel
+                    double loadCapacityValue = Double.parseDouble(loadCapacity);
+                    DroneModel drone = new DroneModel(droneIdValue, status, requesterName, itemName, location, emergencyContact, weatherCondition, loadCapacityValue);
 
-                    // Update the student list (or database)
-                    DroneModel updatedStudent = new DroneModel(
-                        Integer.parseInt(droneId),
-                        status,
-                        requesterName,
-                        itemName,
-                        location,
-                        emergencyContact,
-                        weatherCondition,
-                        Double.parseDouble(loadCapacity)
-                    );
-                    droneList.set(selectedRow, updatedStudent); // Update in-memory list
+                    // Register the drone
+                    registerDrone(drone);
 
-                    // Show a success message
-                    lblMessage.setText("Data successfully updated!");
+                    lblMessage.setText("Your data has been successfully added.");
                     lblMessage.setForeground(Color.BLUE);
                 }
             } else {
-                // If validation fails, show an error message
-                lblMessage.setText("Invalid data! Please check inputs.");
+                lblMessage.setText("Please enter valid data for all fields.");
                 lblMessage.setForeground(Color.RED);
-                //JOptionPane.showMessageDialog(this, "Invalid data! Please check inputs.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            // If no row is selected, show an error message
-            lblMessage.setText("No row selected to update!");
-            lblMessage.setForeground(Color.RED);
-            //JOptionPane.showMessageDialog(this, "No row selected to update!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    /**
+     * Handles the action of launching the next drone from the deployment queue.
+     * The method checks if there are drones in the queue, and if so, dequeues
+     * the first drone, updates the deployment table, and removes the drone from
+     * the inspection list. It also provides feedback to the user.
+     *
+     * @param evt The action event triggered when the "Launch" button is
+     * clicked.
+     */
+    private final CustomQueue vivaQueue = new CustomQueue(100); // Assuming a capacity of 100.
+    private void btnLaunchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaunchActionPerformed
+        // TODO add your handling code here:
+        // Check if there are drones in the queue
+        lblErrorDroneId.setText("");
+        int response = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to launch the next drone?",
+                "Confirm Launch",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        // If user selects 'Yes' (response = JOptionPane.YES_OPTION)
+        if (response == JOptionPane.YES_OPTION) {
+
+            if (!vivaQueue.isEmpty()) {
+                // Dequeue the first drone from deployQueue
+                DroneModel drone = vivaQueue.deQueue();
+
+                // Add the drone to tblDroneAfterDeploymentList
+                DefaultTableModel modelAfterDeployment = (DefaultTableModel) tblStudentAfterVivaList.getModel();
+                modelAfterDeployment.addRow(new Object[]{
+                    drone.getDroneId(), drone.getStatus(), drone.getRequesterName(),
+                    drone.getItemName(), drone.getLocation(), drone.getEmergencyContact(),
+                    drone.getWeatherCondition(), drone.getLoadCapacity()
+                });
+
+                // Remove the first row from tblDroneInspectionList
+                DefaultTableModel modelInspectionList = (DefaultTableModel) tblStudentVivaList.getModel();
+                if (modelInspectionList.getRowCount() > 0) {
+                    modelInspectionList.removeRow(0); // Removes the first row from tblDroneInspectionList
+                }
+
+                lblErrorDroneId.setText("Drone has been successfully launched.");
+                lblErrorDroneId.setForeground(Color.BLUE); // Set error color to blue
+            } else {
+                // If the queue is empty, show a message
+                JOptionPane.showMessageDialog(this, "No more drones in the deployment queue.", "Queue Empty", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            // If the user selects 'No', no functionality is performed
+            JOptionPane.showMessageDialog(this, "Launch action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
 
-    } else {
-        // If the user selects 'No', no functionality is performed
-        JOptionPane.showMessageDialog(this, "Update action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnLaunchActionPerformed
+
+    private void txtEmergencyContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmergencyContactActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmergencyContactActionPerformed
+
+    /**
+     * Handles the action of clearing all fields in the form. A confirmation
+     * dialog is displayed before clearing the fields. If the user confirms, all
+     * fields are cleared, and a success message is displayed.
+     *
+     * @param evt The action event triggered when the "Clear" button is clicked.
+     */
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        // Clear all text fields
+        lblErrorDroneId.setText("");
+        int response = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to clear all fields?",
+                "Confirm Action",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        // If user selects 'Yes' (response = JOptionPane.YES_OPTION)
+        if (response == JOptionPane.YES_OPTION) {
+            txtDroneId.setText("");
+            txtLoadCapacity.setText("");
+            txtItemName.setText("");
+            cmbWeatherCondition.setSelectedIndex(0);
+            txtLocation.setText("");
+            txtEmergencyContact.setText("");
+            txtRequesterName.setText("");
+            cmbWeatherCondition.setSelectedIndex(0);
+
+            // Show a success message
+            lblMessage.setText("All fields have been cleared");
+            lblMessage.setForeground(Color.BLUE);
+
+        } else {
+            // If the user selects 'No', no functionality is performed
+            JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    /**
+     * Handles the action of switching to the 'About Us' tab when the 'Explore'
+     * button is clicked. The currently active tab is changed to the pnlAboutUs
+     * panel.
+     *
+     * @param evt The action event triggered when the "Explore" button is
+     * clicked.
+     */
+    private void btnHomeExploreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeExploreActionPerformed
+        // TODO add your handling code here:
+        // Switch the currently selected tab to the pnlAboutUs panel
+        tabPaneMain.setSelectedComponent(pnlAboutUs);
+    }//GEN-LAST:event_btnHomeExploreActionPerformed
+
+    /**
+     * Handles the mouse click event on the drone table. When a row is clicked:
+     * 1. Updates the background and text color of the selected row. 2.
+     * Populates the corresponding input fields with data from the selected row.
+     *
+     * @param evt The mouse event triggered by the click on the table row.
+     */
+    private void tblDroneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDroneMouseClicked
+        // TODO add your handling code here:
+        tblDrone.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDrone.setSelectionBackground(new Color(173, 216, 230)); // Light Blue color
+                tblDrone.setSelectionForeground(Color.BLACK); // Black text for selection
+                int selectedRow = tblDrone.getSelectedRow();
+                if (selectedRow != -1) {
+                    txtDroneId.setText(tblDrone.getValueAt(selectedRow, 0).toString());
+                    cmbStatus.setSelectedItem(tblDrone.getValueAt(selectedRow, 1).toString()); // For JComboBox
+
+                    //txtStatus1.setText(tblStudent.getValueAt(selectedRow, 1).toString());
+                    txtRequesterName.setText(tblDrone.getValueAt(selectedRow, 2).toString());
+                    txtItemName.setText(tblDrone.getValueAt(selectedRow, 3).toString());
+                    txtLocation.setText(tblDrone.getValueAt(selectedRow, 4).toString());
+                    txtEmergencyContact.setText(tblDrone.getValueAt(selectedRow, 5).toString());
+                    cmbWeatherCondition.setSelectedItem(tblDrone.getValueAt(selectedRow, 6).toString());
+
+                    //txtWeatherCondition.setText(tblStudent.getValueAt(selectedRow, 6).toString());
+                    txtLoadCapacity.setText(tblDrone.getValueAt(selectedRow, 7).toString());
+                }
+            }
+        });
+    }//GEN-LAST:event_tblDroneMouseClicked
+
+    /**
+     * Checks if the given drone ID already exists in the list, excluding the
+     * current row.
+     *
+     * @param droneId The drone ID to check for duplicates.
+     * @param currentRow The index of the current row being updated, to be
+     * excluded from the check.
+     * @return true if the drone ID exists in another row, false if it is
+     * unique.
+     */
+    private boolean isDroneIdExistsForUpdate(int droneId, int currentRow) {
+        for (int i = 0; i < droneList.size(); i++) {
+            if (i != currentRow && droneList.get(i).getDroneId() == droneId) {
+                return true; // Drone ID already exists in another row
+            }
+        }
+        return false; // Drone ID is unique for update
     }
+
+    /**
+     * Handles the update action when the "Update" button is clicked. This
+     * method performs the following operations:
+     * <ul>
+     * <li>Displays a confirmation dialog to ensure the user wants to update the
+     * drone's data.</li>
+     * <li>Validates the input fields to ensure they contain correct and valid
+     * data.</li>
+     * <li>Checks if the updated Drone ID already exists in the list (excluding
+     * the current row).</li>
+     * <li>If all validations pass and the Drone ID is unique, updates the table
+     * and internal list with the new drone information.</li>
+     * <li>Displays appropriate success or error messages based on the
+     * validation results.</li>
+     * </ul>
+     *
+     * <p>
+     * In case the validation fails or the Drone ID already exists, the user
+     * will be informed with an error message. If no row is selected in the
+     * table, the user will be prompted with an error message stating that no
+     * row has been selected for updating.</p>
+     *
+     * @param evt The event triggered when the user clicks the "Update" button.
+     */
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        // Show confirmation dialog
+        int response = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to update the selected drone's data?",
+                "Confirm Update",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        // If user selects 'Yes'
+        if (response == JOptionPane.YES_OPTION) {
+            int selectedRow = tblDrone.getSelectedRow();
+            if (selectedRow != -1) {
+                // Get updated values from text fields
+                String droneId = txtDroneId.getText();
+                String status = cmbStatus.getSelectedItem().toString();
+                String requesterName = txtRequesterName.getText();
+                String itemName = txtItemName.getText();
+                String location = txtLocation.getText();
+                String emergencyContact = txtEmergencyContact.getText();
+                String weatherCondition = cmbWeatherCondition.getSelectedItem().toString();
+                String loadCapacity = txtLoadCapacity.getText();
+
+                // Validation check
+                boolean isValid = true; // Flag to check overall validation
+
+                if (!ValidationUtil.isValidDroneId(droneId, lblErrorDroneId)) {
+                    isValid = false;
+                    highlightInvalidField(txtDroneId, "DroneID", Color.RED);
+                } else {
+                    resetFieldBorderWithTitle(txtDroneId, "DroneID");
+                    lblErrorDroneId.setText("");
+                }
+
+                if (!ValidationUtil.isValidRequesterName(requesterName, lblErrorRequesterName)) {
+                    isValid = false;
+                    highlightInvalidField(txtRequesterName, "RequesterName", Color.RED);
+                } else {
+                    resetFieldBorderWithTitle(txtRequesterName, "RequesterName");
+                    lblErrorRequesterName.setText("");
+                }
+
+                if (!ValidationUtil.isValidLocation(location, lblErrorLocation)) {
+                    isValid = false;
+                    highlightInvalidField(txtLocation, "Location", Color.RED);
+                } else {
+                    resetFieldBorderWithTitle(txtLocation, "Location");
+                    lblErrorLocation.setText("");
+                }
+
+                if (!ValidationUtil.isValidItemName(itemName, lblErrorItemName)) {
+                    isValid = false;
+                    highlightInvalidField(txtItemName, "ItemName", Color.RED);
+                } else {
+                    resetFieldBorderWithTitle(txtItemName, "ItemName");
+                    lblErrorItemName.setText("");
+                }
+
+                if (!ValidationUtil.isValidEmergencyContact(emergencyContact, lblErrorEmergencyContact)) {
+                    isValid = false;
+                    highlightInvalidField(txtEmergencyContact, "EmergencyContact", Color.RED);
+                } else {
+                    resetFieldBorderWithTitle(txtEmergencyContact, "EmergencyContact");
+                    lblErrorEmergencyContact.setText("");
+                }
+
+                if (!ValidationUtil.isValidLoadCapacity(loadCapacity, lblErrorLoadCapacity)) {
+                    isValid = false;
+                    highlightInvalidField(txtLoadCapacity, "LoadCapacity(kg)", Color.RED);
+                } else {
+                    resetFieldBorderWithTitle(txtLoadCapacity, "LoadCapacity(kg)");
+                    lblErrorLoadCapacity.setText("");
+                }
+
+                if (isValid) {
+                    lblErrorDroneId.setText("");
+
+                    int droneIdValue = Integer.parseInt(droneId);
+
+                    // Check if the updated Drone ID already exists, excluding the current row
+                    if (isDroneIdExistsForUpdate(droneIdValue, selectedRow)) {
+                        lblMessage.setText("DroneID " + droneId + " already exists and cannot be updated!");
+                        lblMessage.setForeground(Color.BLUE);
+                    } else {
+                        // Update the table
+                        tblDrone.setValueAt(droneId, selectedRow, 0);
+                        tblDrone.setValueAt(cmbStatus.getSelectedItem().toString(), selectedRow, 1);
+                        tblDrone.setValueAt(requesterName, selectedRow, 2);
+                        tblDrone.setValueAt(itemName, selectedRow, 3);
+                        tblDrone.setValueAt(location, selectedRow, 4);
+                        tblDrone.setValueAt(emergencyContact, selectedRow, 5);
+                        tblDrone.setValueAt(cmbWeatherCondition.getSelectedItem().toString(), selectedRow, 6);
+                        tblDrone.setValueAt(loadCapacity, selectedRow, 7);
+
+                        // Update the student list (or database)
+                        DroneModel updatedStudent = new DroneModel(
+                                Integer.parseInt(droneId),
+                                status,
+                                requesterName,
+                                itemName,
+                                location,
+                                emergencyContact,
+                                weatherCondition,
+                                Double.parseDouble(loadCapacity)
+                        );
+                        droneList.set(selectedRow, updatedStudent); // Update in-memory list
+
+                        // Show a success message
+                        lblMessage.setText("Data successfully updated!");
+                        lblMessage.setForeground(Color.BLUE);
+                    }
+                } else {
+                    // If validation fails, show an error message
+                    lblMessage.setText("Invalid data! Please check inputs.");
+                    lblMessage.setForeground(Color.RED);
+                    //JOptionPane.showMessageDialog(this, "Invalid data! Please check inputs.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                // If no row is selected, show an error message
+                lblMessage.setText("No row selected to update!");
+                lblMessage.setForeground(Color.RED);
+                //JOptionPane.showMessageDialog(this, "No row selected to update!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } else {
+            // If the user selects 'No', no functionality is performed
+            JOptionPane.showMessageDialog(this, "Update action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void txtSearchValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchValueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSearchValueActionPerformed
+
+    /**
+     * Handles the sorting of drone data based on the selected field (Drone ID,
+     * Item Name, or Location) and sorting order (Ascending/Descending). It uses
+     * different sorting algorithms for each field:
+     * <ul>
+     * <li>Selection Sort for Drone ID</li>
+     * <li>Insertion Sort for Item Name</li>
+     * <li>Merge Sort for Location</li>
+     * </ul>
+     * The method checks for valid selections and displays an error message if
+     * needed. After sorting, the data is loaded into the table.
+     *
+     * @param evt The event triggered when the "Sort" button is clicked.
+     */
+    private void btnSortingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortingActionPerformed
+        // TODO add your handling code here:
+        // Retrieve the selected field and sorting order from combo boxes
+        String selectedField = cmbSortBy.getSelectedItem().toString();  // For selecting Drone ID, ItemName, or Location
+        String selectedOrder = cmbSelectionSortingOrder.getSelectedItem().toString();  // For selecting Ascending/Descending
+
+        // Check if a valid field is selected
+        if (selectedField.equals("Select Field")) {
+            JOptionPane.showMessageDialog(this, "Please select a valid field for sorting (Drone ID, ItemName, or Location).", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Exit if no field is selected
+        }
+
+        // Determine the sort order: true for descending, false for ascending
+        boolean isDesc = selectedOrder.equals("Descending");
+
+        // Initialize the sorted list variable
+        List<DroneModel> sortedList = null;
+
+        // Sort the data based on the selected field
+        if (selectedField.equals("Drone ID")) {
+            // Use SelectionSort for Drone ID
+            SelectionSort selectionSort = new SelectionSort();
+            sortedList = selectionSort.sortByDroneId(droneList, isDesc);
+        } else if (selectedField.equals("ItemName")) {
+            // Use InsertionSort for ItemName
+            InsertionSort insertionSort = new InsertionSort();
+            sortedList = insertionSort.sortByItemName(droneList, isDesc);
+        } else if (selectedField.equals("Location")) {
+            // Use MergeSort for Location
+            MergeSort mergeSort = new MergeSort();
+            sortedList = mergeSort.sortByLocation(droneList, isDesc);
+        }
+
+        // Check if sortedList is not null before loading it into the table
+        if (sortedList != null && !sortedList.isEmpty()) {
+            loadListToTable(sortedList);
+        } else {
+            JOptionPane.showMessageDialog(this, "No data available for sorting.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSortingActionPerformed
+
+    /**
+     * Populates the table with drone data from the provided list of DroneModel
+     * objects. Clears any existing rows in the table before adding new data.
+     *
+     * @param droneList The list of DroneModel objects containing the data to be
+     * displayed.
+     */
+    private void loadListToTable(List<DroneModel> droneList) {
+        DefaultTableModel model = (DefaultTableModel) tblDroneInformation.getModel();
+
+        //clear existing rows if needed
+        model.setRowCount(0);
+
+        //populate the table with drone data
+        droneList.forEach(drone -> model.addRow(new Object[]{
+            drone.getDroneId(),
+            drone.getStatus(),
+            drone.getRequesterName(),
+            drone.getItemName(),
+            drone.getLocation(),
+            drone.getEmergencyContact(),
+            drone.getWeatherCondition(),
+            drone.getLoadCapacity()
+        }));
+    }
+
+    /**
+     * Handles the search action when the user initiates a search for a specific
+     * drone. Validates input, sorts the drone list, and performs a binary
+     * search based on the selected column. Displays the search result in the
+     * UI.
+     *
+     * @param evt The event that triggered this action.
+     */
+    private void btnSearchingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchingActionPerformed
+        // Get user inputs
+        String searchValue = txtSearchValue.getText().trim();
+        String selectedColumn = cmbSearchBy.getSelectedItem().toString();
+
+        // Validate input
+        if (searchValue.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a value to search.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        BinarySearch binarySearch = new BinarySearch();
+        // Sort the drone list based on the selected column
+        sortDroneList(selectedColumn);
+
+        // Perform binary search
+        DroneModel result = binarySearch.searchByField(searchValue, selectedColumn, droneList, 0, droneList.size() - 1);
+
+        // Display result
+        showSearchResult(result);
+    }//GEN-LAST:event_btnSearchingActionPerformed
+
+    /**
+     * Sorts the drone list based on the selected column (Drone ID, Item Name,
+     * or Location). The sorting order is set to ascending, and a specific
+     * sorting algorithm (SelectionSort, InsertionSort, or MergeSort) is applied
+     * based on the selected column.
+     *
+     * @param selectedColumn The column by which the drone list should be sorted
+     * (e.g., "Drone ID", "ItemName", or "Location").
+     */
+    private void sortDroneList(String selectedColumn) {
+        // Sorting based on selected column
+//        if (selectedColumn.equals("Drone ID")) {
+//            droneList.sort(Comparator.comparingInt(DroneModel::getDroneId)); // Sort by Drone ID
+
+        SelectionSort selectionSort = new SelectionSort();
+        InsertionSort insertionSort = new InsertionSort();
+        MergeSort mergeSort = new MergeSort();
+        if (selectedColumn.equals("Drone ID")) {
+            // Sort in Ascending order
+            boolean isDesc = false;
+            // Sort the droneList using SelectionSort
+            droneList = selectionSort.sortByDroneId(droneList, isDesc);
+
+        } else if (selectedColumn.equals("ItemName")) {
+            // Choose sorting order (true for descending, false for ascending)
+            boolean isDesc = false; // Set to 'true' for descending, 'false' for ascending
+
+            // Sort the droneList using InsertionSort
+            droneList = insertionSort.sortByItemName(droneList, isDesc);
+
+        } else if (selectedColumn.equals("Location")) {
+            // Choose sorting order (true for descending, false for ascending)
+            boolean isDesc = false; // Set to 'true' for descending, 'false' for ascending
+
+            // Sort the droneList using InsertionSort
+            droneList = mergeSort.sortByLocation(droneList, isDesc);
+        }
+    }
+
+    /**
+     * Displays the search result in a table format within a dialog box. If no
+     * result is found, it shows an information message. The table displays the
+     * details of the matching drone based on the search query. The dialog box
+     * displays the table with custom column widths for better visibility.
+     *
+     * @param result The DroneModel object representing the matching search
+     * result.
+     */
+    // Display search results in table format
+    public void showSearchResult(DroneModel result) {
+        if (result == null) {
+            JOptionPane.showMessageDialog(null, "No matching record found.", "Search Result", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Create column names
+        String[] columnNames = {"Drone ID", "Status", "RequesterName",
+            "ItemName", "Location", "EmergencyContact",
+            "WeatherCondition", "LoadCapacity(kg)"};
+
+        // Create data for the table
+        Object[][] data = {
+            {result.getDroneId(), result.getStatus(), result.getRequesterName(),
+                result.getItemName(), result.getLocation(), result.getEmergencyContact(),
+                result.getWeatherCondition(), result.getLoadCapacity()}
+        };
+
+        // Create table model and table
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
+        JTable table = new JTable(tableModel);
+
+        // Set preferred width for columns for better visibility
+        table.getColumnModel().getColumn(0).setPreferredWidth(100); // Drone ID column
+        table.getColumnModel().getColumn(1).setPreferredWidth(130); // Status column
+        table.getColumnModel().getColumn(2).setPreferredWidth(130); // RequesterName column
+        table.getColumnModel().getColumn(3).setPreferredWidth(130); // ItemName column
+        table.getColumnModel().getColumn(4).setPreferredWidth(130); // Location column
+        table.getColumnModel().getColumn(5).setPreferredWidth(150); // EmergencyContact column
+        table.getColumnModel().getColumn(6).setPreferredWidth(100); // WeatherCondition column
+        table.getColumnModel().getColumn(7).setPreferredWidth(150); // LoadCapacity(kg) column
+
+        // Create a scroll pane and set the preferred size for the dialog box
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(1200, 100)); // Adjust width (800) and height (300)
+
+        // Show the table in a dialog box with a custom size
+        JOptionPane optionPane = new JOptionPane(scrollPane, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION);
+        JDialog dialog = optionPane.createDialog(null, "Search Result");
+        dialog.setSize(1200, 100);  // Set the dialog box size (width: 1000, height: 400)
+        dialog.setVisible(true);
+        // Show table in dialog box
+        // JOptionPane.showMessageDialog(null, new JScrollPane(table), "Search Result", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Handles the search action for the button click event. It clears the error
+     * message and copies the rows from the `tblDrone` table to the
+     * `tblDroneInspectionList` table. The rows from `tblDrone` are copied to
+     * avoid duplicates and then the current tab is switched to the
+     * `pnlVivaList` panel.
+     *
+     * @param evt The event triggered by the button click.
+     */
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        // Show confirmation dialog
+        lblErrorDroneId.setText("");
+
+        // Get the table models for tblDrone and tblDroneInspectionList
+        DefaultTableModel droneModel = (DefaultTableModel) tblDrone.getModel();
+        DefaultTableModel inspectionModel = (DefaultTableModel) tblDroneInformation.getModel();
+
+        // Clear existing rows in tblDroneInspectionList to avoid duplicates
+        inspectionModel.setRowCount(0);
+
+        // Loop through rows in tblDrone and copy to tblDroneInspectionList
+        for (int i = 0; i < droneModel.getRowCount(); i++) {
+            Object[] rowData = new Object[droneModel.getColumnCount()];
+            for (int j = 0; j < droneModel.getColumnCount(); j++) {
+                rowData[j] = droneModel.getValueAt(i, j); // Copy cell data
+            }
+            inspectionModel.addRow(rowData); // Add the row to tblDroneInspectionList
+        }
+
+        // Switch the currently selected tab to the pnlAboutUs panel
+        tabPaneMain.setSelectedComponent(pnlVivaList);
+
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    /**
+     * Handles the sort action for the button click event. It clears any
+     * existing error message, copies the rows from the `tblDrone` table to the
+     * `tblDroneInspectionList` table, and ensures there are no duplicate
+     * entries in the `tblDroneInspectionList`. Afterward, the currently
+     * selected tab is switched to the `pnlVivaList` panel.
+     *
+     * @param evt The event triggered by the button click.
+     */
+    private void btnSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortActionPerformed
+        // TODO add your handling code here:
+        lblErrorDroneId.setText("");
+        // Get the table models for tblDrone and tblDroneInspectionList
+        DefaultTableModel droneModel = (DefaultTableModel) tblDrone.getModel();
+        DefaultTableModel inspectionModel = (DefaultTableModel) tblDroneInformation.getModel();
+
+        // Clear existing rows in tblDroneInspectionList to avoid duplicates
+        inspectionModel.setRowCount(0);
+
+        // Loop through rows in tblDrone and copy to tblDroneInspectionList
+        for (int i = 0; i < droneModel.getRowCount(); i++) {
+            Object[] rowData = new Object[droneModel.getColumnCount()];
+            for (int j = 0; j < droneModel.getColumnCount(); j++) {
+                rowData[j] = droneModel.getValueAt(i, j); // Copy cell data
+            }
+            inspectionModel.addRow(rowData); // Add the row to tblDroneInspectionList
+        }
+
+        // Switch the currently selected tab to the pnlAboutUs panel
+        tabPaneMain.setSelectedComponent(pnlVivaList);
+
+    }//GEN-LAST:event_btnSortActionPerformed
+
+    /**
+     * Handles the sort action for the button click event. It clears any
+     * existing error message, copies the rows from the `tblDrone` table to the
+     * `tblDroneInspectionList` table, and ensures there are no duplicate
+     * entries in the `tblDroneInspectionList`. Afterward, the currently
+     * selected tab is switched to the `pnlVivaList` panel.
+     *
+     * @param evt The event triggered by the button click.
+     */
+    private void btnViewDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewDetailsActionPerformed
+        // TODO add your handling code here:
+        lblErrorDroneId.setText("");
+        // Get the table models for tblDrone and tblDroneInspectionList
+        DefaultTableModel droneModel = (DefaultTableModel) tblDrone.getModel();
+        DefaultTableModel inspectionModel = (DefaultTableModel) tblDroneInformation.getModel();
+
+        // Clear existing rows in tblDroneInspectionList to avoid duplicates
+        inspectionModel.setRowCount(0);
+
+        // Loop through rows in tblDrone and copy to tblDroneInspectionList
+        for (int i = 0; i < droneModel.getRowCount(); i++) {
+            Object[] rowData = new Object[droneModel.getColumnCount()];
+            for (int j = 0; j < droneModel.getColumnCount(); j++) {
+                rowData[j] = droneModel.getValueAt(i, j); // Copy cell data
+            }
+            inspectionModel.addRow(rowData); // Add the row to tblDroneInspectionList
+        }
+
+        // Switch the currently selected tab to the pnlAboutUs panel
+        tabPaneMain.setSelectedComponent(pnlVivaList);
+
+    }//GEN-LAST:event_btnViewDetailsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1668,7 +2132,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
         java.awt.EventQueue.invokeLater(() -> {
             app.setVisible(true);
         });
-        System.out.println("College App Started");
+        System.out.println("drone App Started");
         app.startProgress();
 
     }
@@ -1683,18 +2147,30 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRemove;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnSearching;
+    private javax.swing.JButton btnSort;
+    private javax.swing.JButton btnSorting;
     private javax.swing.JButton btnSupply;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnViewDetails;
+    private javax.swing.JComboBox<String> cmbSearchBy;
+    private javax.swing.JComboBox<String> cmbSelectionSortingOrder;
+    private javax.swing.JComboBox<String> cmbSortBy;
     private javax.swing.JComboBox<String> cmbStatus;
     private javax.swing.JComboBox<String> cmbWeatherCondition;
     private javax.swing.JLabel formTitle;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jtoolRedColor;
+    private javax.swing.JToolBar jtoolRedColor1;
     private javax.swing.JLabel lblAdminDashboard;
     private javax.swing.JLabel lblBatterySubTitle;
     private javax.swing.JLabel lblBatteryTitle;
     private javax.swing.JLabel lblDashImage;
     private javax.swing.JLabel lblDashboardImageUp;
     private javax.swing.JLabel lblDroneBackground;
+    private javax.swing.JLabel lblDroneInformation;
     private javax.swing.JLabel lblDroneLogo;
     private javax.swing.JLabel lblErrorDroneId;
     private javax.swing.JLabel lblErrorEmergencyContact;
@@ -1725,7 +2201,9 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
     private javax.swing.JLabel lblPropeller;
     private javax.swing.JLabel lblPropellerSubTitle;
     private javax.swing.JLabel lblQuardTitle;
+    private javax.swing.JLabel lblSearch;
     private javax.swing.JLabel lblSlogan;
+    private javax.swing.JLabel lblSort;
     private javax.swing.JLabel lblSumanDirector;
     private javax.swing.JLabel lblSumanImage;
     private javax.swing.JLabel lblTblStudentTitle;
@@ -1734,6 +2212,7 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
     private javax.swing.JProgressBar pgBarSplashScreen;
     private javax.swing.JPanel pnlAboutUs;
     private javax.swing.JPanel pnlAdminControl;
+    private javax.swing.JPanel pnlBackgroundColor;
     private javax.swing.JPanel pnlButton;
     private javax.swing.JPanel pnlButton1;
     private javax.swing.JPanel pnlHome;
@@ -1746,16 +2225,14 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
     private javax.swing.JPanel pnlVivaList;
     private javax.swing.JPasswordField pwdFldLogin;
     private javax.swing.JScrollPane spTblStudent;
-    private javax.swing.JScrollPane spTblStudentViva;
     private javax.swing.JScrollPane spTblStudentViva1;
     private javax.swing.JScrollPane spTblStudentVivaList;
     private javax.swing.JScrollPane spTblStudentVivaList1;
     private javax.swing.JTabbedPane tabPaneMain;
     private javax.swing.JTable tblDrone;
+    private javax.swing.JTable tblDroneInformation;
     private javax.swing.JTable tblStudentAfterVivaList;
     private javax.swing.JTable tblStudentVivaList;
-    private javax.swing.JTable tblVivaStudentAfterQueue;
-    private javax.swing.JTable tblVivaStudentQueueList;
     private javax.swing.JTextField txtDroneId;
     private javax.swing.JTextField txtEmergencyContact;
     private javax.swing.JTextField txtFldLoginUsername;
@@ -1763,5 +2240,6 @@ private void resetFieldBorderWithTitle(JTextField textField, String title) {
     private javax.swing.JTextField txtLoadCapacity;
     private javax.swing.JTextField txtLocation;
     private javax.swing.JTextField txtRequesterName;
+    private javax.swing.JTextField txtSearchValue;
     // End of variables declaration//GEN-END:variables
 }

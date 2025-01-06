@@ -4,7 +4,6 @@
  */
 package com.medicaredrone.controller;
 
-
 import java.awt.Color;
 import java.util.regex.Pattern;
 import javax.swing.JLabel;
@@ -12,9 +11,8 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @ Suman lama
+ * @ Suman lama 23048591
  */
-
 public class ValidationUtil {
 
     // Regular expressions for validation
@@ -33,8 +31,7 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates the Drone ID.
-     * It should be numeric and exactly 8 digits.
+     * Validates the Drone ID. It should be numeric and exactly 8 digits.
      *
      * @param droneId the drone ID to validate
      * @param lblError the JLabel to show error messages
@@ -55,8 +52,7 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates the status.
-     * It should be a single word (alphabetical).
+     * Validates the status. It should be a single word (alphabetical).
      *
      * @param status the status to validate
      * @param lblError the JLabel to show error messages
@@ -77,8 +73,8 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates the requester name.
-     * It should consist of a maximum of 4 words and contain only alphabets.
+     * Validates the requester name. It should consist of a maximum of 4 words
+     * and contain only alphabets.
      *
      * @param requesterName the requester name to validate
      * @param lblError the JLabel to show error messages
@@ -99,8 +95,8 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates the location.
-     * It should consist of a maximum of 4 words and contain only alphabets.
+     * Validates the location. It should consist of a maximum of 4 words and
+     * contain only alphabets.
      *
      * @param location the location to validate
      * @param lblError the JLabel to show error messages
@@ -121,8 +117,8 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates the item name.
-     * It should consist of exactly 2 words and contain only alphabets.
+     * Validates the item name. It should consist of exactly 2 words and contain
+     * only alphabets.
      *
      * @param itemName the item name to validate
      * @param lblError the JLabel to show error messages
@@ -130,24 +126,24 @@ public class ValidationUtil {
      */
     public static boolean isValidItemName(String itemName, JLabel lblError) {
         // Check if the item name is null or empty
-    if (isNullOrEmpty(itemName)) {
-        lblError.setText("Item name cannot be empty.");
-        lblError.setForeground(Color.RED); // Set error color to red
-        return false;
-    }
+        if (isNullOrEmpty(itemName)) {
+            lblError.setText("Item name cannot be empty.");
+            lblError.setForeground(Color.RED); // Set error color to red
+            return false;
+        }
 
-    // Check if the item name contains only letters and spaces, and has at most 3 words
-    if (!ALPHABET_PATTERN.matcher(itemName).matches() || itemName.split("\\s+").length > 3) {
-        lblError.setText("Item name must contain a maximum of 3 words, each with valid characters.");
-        lblError.setForeground(Color.RED); // Set error color to red
-        return false;
-    }
+        // Check if the item name contains only letters and spaces, and has at most 3 words
+        if (!ALPHABET_PATTERN.matcher(itemName).matches() || itemName.split("\\s+").length > 3) {
+            lblError.setText("Item name must contain a maximum of 3 words, each with valid characters.");
+            lblError.setForeground(Color.RED); // Set error color to red
+            return false;
+        }
         return true;
     }
 
     /**
-     * Validates the emergency contact.
-     * It should be 10 digits, starting with 98 or 97.
+     * Validates the emergency contact. It should be 10 digits, starting with 98
+     * or 97.
      *
      * @param emergencyContact the emergency contact to validate
      * @param lblError the JLabel to show error messages
@@ -168,8 +164,8 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates the weather condition.
-     * It should be a single word and contain only alphabets.
+     * Validates the weather condition. It should be a single word and contain
+     * only alphabets.
      *
      * @param weatherCondition the weather condition to validate
      * @param lblError the JLabel to show error messages
@@ -190,8 +186,8 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates the load capacity.
-     * It should be numeric, greater than 0 and less than or equal to 15.
+     * Validates the load capacity. It should be numeric, greater than 0 and
+     * less than or equal to 15.
      *
      * @param loadCapacity the load capacity to validate
      * @param lblError the JLabel to show error messages
