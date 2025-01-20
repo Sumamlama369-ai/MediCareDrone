@@ -623,7 +623,7 @@
                 <Component class="javax.swing.JLabel" name="lblErrorDroneId">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="220" y="452" width="211" height="24"/>
+                      <AbsoluteConstraints x="210" y="450" width="230" height="24"/>
                     </Constraint>
                   </Constraints>
                 </Component>
@@ -687,35 +687,35 @@
                 <Component class="javax.swing.JLabel" name="lblErrorLocation">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="719" y="452" width="234" height="24"/>
+                      <AbsoluteConstraints x="650" y="450" width="260" height="24"/>
                     </Constraint>
                   </Constraints>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblErrorEmergencyContact">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="959" y="452" width="232" height="28"/>
+                      <AbsoluteConstraints x="910" y="460" width="300" height="28"/>
                     </Constraint>
                   </Constraints>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblErrorRequesterName">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="220" y="560" width="226" height="25"/>
+                      <AbsoluteConstraints x="206" y="560" width="250" height="25"/>
                     </Constraint>
                   </Constraints>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblErrorItemName">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="470" y="560" width="210" height="25"/>
+                      <AbsoluteConstraints x="440" y="570" width="280" height="25"/>
                     </Constraint>
                   </Constraints>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblErrorLoadCapacity">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="950" y="550" width="171" height="40"/>
+                      <AbsoluteConstraints x="891" y="550" width="320" height="40"/>
                     </Constraint>
                   </Constraints>
                 </Component>

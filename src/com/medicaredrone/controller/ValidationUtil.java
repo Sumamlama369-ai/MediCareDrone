@@ -87,7 +87,7 @@ public class ValidationUtil {
             return false;
         }
         if (!ALPHABET_PATTERN.matcher(requesterName).matches() || requesterName.split("\\s+").length > 4) {
-            lblError.setText("Requester name must contain only alphabets and up to 4 words.");
+            lblError.setText("Requester name must contain only alphabets up to 4 words.");
             lblError.setForeground(Color.RED); // Set error color to red
             return false;
         }
@@ -109,7 +109,7 @@ public class ValidationUtil {
             return false;
         }
         if (!ALPHABET_PATTERN.matcher(location).matches() || location.split("\\s+").length > 4) {
-            lblError.setText("Location must contain only alphabets and up to 4 words.");
+            lblError.setText("Location must contain only alphabets up to 4 words.");
             lblError.setForeground(Color.RED); // Set error color to red
             return false;
         }
@@ -134,7 +134,7 @@ public class ValidationUtil {
 
         // Check if the item name contains only letters and spaces, and has at most 3 words
         if (!ALPHABET_PATTERN.matcher(itemName).matches() || itemName.split("\\s+").length > 3) {
-            lblError.setText("Item name must contain a maximum of 3 words, each with valid characters.");
+            lblError.setText("Item name must contain a maximum of 3 words.");
             lblError.setForeground(Color.RED); // Set error color to red
             return false;
         }
@@ -156,7 +156,7 @@ public class ValidationUtil {
             return false;
         }
         if (!CONTACT_PATTERN.matcher(emergencyContact).matches()) {
-            lblError.setText("Emergency contact must be 10 digits, starting with 98 or 97.");
+            lblError.setText("Emergency contact must be 10 digits,starting with 98 or 97.");
             lblError.setForeground(Color.RED); // Set error color to red
             return false;
         }

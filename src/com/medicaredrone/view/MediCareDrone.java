@@ -431,7 +431,7 @@ public class MediCareDrone extends javax.swing.JFrame {
 
         txtLoadCapacity.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LoadCapacity(kg)", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
         pnlStudentList.add(txtLoadCapacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(956, 496, 149, 60));
-        pnlStudentList.add(lblErrorDroneId, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 452, 211, 24));
+        pnlStudentList.add(lblErrorDroneId, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 450, 230, 24));
 
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Completed", "Pending", "Failed" }));
         cmbStatus.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Status", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
@@ -440,11 +440,11 @@ public class MediCareDrone extends javax.swing.JFrame {
         cmbWeatherCondition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sunny", "Cloudy", "Rainy", "Snowy", "Foggy", "Windy" }));
         cmbWeatherCondition.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Weather Condition", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(26, 82, 117))); // NOI18N
         pnlStudentList.add(cmbWeatherCondition, new org.netbeans.lib.awtextra.AbsoluteConstraints(719, 492, 149, 60));
-        pnlStudentList.add(lblErrorLocation, new org.netbeans.lib.awtextra.AbsoluteConstraints(719, 452, 234, 24));
-        pnlStudentList.add(lblErrorEmergencyContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(959, 452, 232, 28));
-        pnlStudentList.add(lblErrorRequesterName, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 560, 226, 25));
-        pnlStudentList.add(lblErrorItemName, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 560, 210, 25));
-        pnlStudentList.add(lblErrorLoadCapacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 550, 171, 40));
+        pnlStudentList.add(lblErrorLocation, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 450, 260, 24));
+        pnlStudentList.add(lblErrorEmergencyContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 460, 300, 28));
+        pnlStudentList.add(lblErrorRequesterName, new org.netbeans.lib.awtextra.AbsoluteConstraints(206, 560, 250, 25));
+        pnlStudentList.add(lblErrorItemName, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 570, 280, 25));
+        pnlStudentList.add(lblErrorLoadCapacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(891, 550, 320, 40));
         pnlStudentList.add(lblMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(496, 343, 331, 32));
 
         btnSort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/collegeapp/resources/sorting.jpg"))); // NOI18N
@@ -1891,7 +1891,7 @@ public class MediCareDrone extends javax.swing.JFrame {
 
         // Validate input
         if (searchValue.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter a value to search.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Search value not found", "Input Search Result", JOptionPane.ERROR_MESSAGE);
             return;
         }
         BinarySearch binarySearch = new BinarySearch();
